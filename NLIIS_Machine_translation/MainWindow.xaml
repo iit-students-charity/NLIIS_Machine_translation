@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NLIIS_Machine_translation"
         mc:Ignorable="d"
-        Title="Machine Translation" Height="290" Width="520">
+        Title="Machine Translation" Height="320" Width="520">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300" />
@@ -16,6 +16,7 @@
             <RowDefinition Height="20" />
             <RowDefinition Height="30" />
             <RowDefinition Height="200" />
+            <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         
         <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Height="20">
@@ -47,11 +48,15 @@
         />
         
         <TabControl Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
-            <TabItem Name="TranslatedTab" Header="Translated">
-                
+            <TabItem Header="Translated">
+                <TextBox Name="TranslatedTextBox" IsReadOnly="True"
+                         BorderThickness="0" VerticalScrollBarVisibility="Visible" TextWrapping="Wrap"/>
             </TabItem>
             <TabItem Name="FrequencyListTab" Header="Frequency list"></TabItem>
             <TabItem Name="SyntaxTreeTab" Header="Syntax tree"></TabItem>
         </TabControl>
+        
+        <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Name="SummaryLabel"
+               Content="No saved translations yet"/>
     </Grid>
 </Window>

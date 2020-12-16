@@ -24,7 +24,7 @@ namespace NLIIS_Machine_translation
 
         private void Help_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(string.Empty);
+            MessageBox.Show(string.Empty, "Help");
         }
         
         private void Authors_Click(object sender, RoutedEventArgs e)
@@ -34,11 +34,29 @@ namespace NLIIS_Machine_translation
 
         private void TranslateDocument(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrEmpty(DocumentToUploadPath.Text))
+            {
+                SummaryLabel.Content = "Please, specify the filename";
+            }
             
+            var text = DocumentService.FromFile(DocumentToUploadPath.Text);
+            //var translated = Translator.TranslateText(text);
+            var translated = "alles gute".PadLeft(10000, '0');
+            var saveFilename = $"{text.Substring(0, text.Length < 10 ? text.Length : 10)}__translated";
+            
+            var savePath = DocumentService.ToFile(translated, saveFilename);
+            SummaryLabel.Content = $"Translation saved to {savePath}";
+
+            TranslatedTextBox.Text = translated;
         }
 
         private void UploadTranslations(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrEmpty(DocumentToUploadPath.Text))
+            {
+                SummaryLabel.Content = "Please, specify the filename";
+            }
+            
             DictionaryService.AddFromFile(DocumentToUploadPath.Text);
         }
 
