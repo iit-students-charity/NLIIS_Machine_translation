@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using Microsoft.Win32;
+using NLIIS_Machine_translation.Services;
 
 namespace NLIIS_Machine_translation
 {
@@ -9,6 +10,8 @@ namespace NLIIS_Machine_translation
         
         public MainWindow()
         {
+            MongoDBConnector.CreateSession("nliis");
+            
             _openFileDialog = new OpenFileDialog
             {
                 DefaultExt = "txt",
@@ -21,7 +24,7 @@ namespace NLIIS_Machine_translation
 
         private void Help_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("");
+            MessageBox.Show(string.Empty);
         }
         
         private void Authors_Click(object sender, RoutedEventArgs e)
@@ -29,16 +32,21 @@ namespace NLIIS_Machine_translation
             MessageBox.Show("Group 721701:\nSemenikhin Nikita,\nStryzhych Angelika", "Authors");
         }
 
-        private void Translate(object sender, RoutedEventArgs e)
+        private void TranslateDocument(object sender, RoutedEventArgs e)
         {
             
+        }
+
+        private void UploadTranslations(object sender, RoutedEventArgs e)
+        {
+            DictionaryService.AddFromFile(DocumentToUploadPath.Text);
         }
 
         private void OpenFileDialog(object sender, RoutedEventArgs e)
         {
             if (_openFileDialog.ShowDialog() == true)
             {
-                DocumentToReferPath.Text = _openFileDialog.FileName;
+                DocumentToUploadPath.Text = _openFileDialog.FileName;
             }
         }
     }
