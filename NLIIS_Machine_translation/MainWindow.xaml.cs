@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
@@ -92,10 +93,13 @@ namespace NLIIS_Machine_translation
 
             try
             {
-                TreeImage.Source = null;
-                bitmap.BeginInit();
-                bitmap.UriSource = new Uri(@"D:\tree.jpg");
+                using var imageFileStream = new FileStream(@"D:\tree.jpg", FileMode.Open);
+                bitmap.BeginInit();                
+                bitmap.StreamSource = imageFileStream;                
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
                 bitmap.EndInit();
+
+                bitmap.Freeze();
                 
                 TreeImage.Source = bitmap;
             }
