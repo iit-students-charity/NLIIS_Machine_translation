@@ -33,6 +33,15 @@ namespace NLIIS_Machine_translation.Services
 
             return words;
         }
+        
+        public static IEnumerable<string> GetSentences(string text)
+        {
+            var sentences = text.Replace("\r", string.Empty)
+                .Split("\n")
+                .Where(sentence => !sentence.Equals(string.Empty));
+
+            return sentences;
+        }
 
         public static IEnumerable<string> GetTerms(string text, bool removeUseless)
         {
