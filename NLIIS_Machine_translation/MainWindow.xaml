@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NLIIS_Machine_translation"
         mc:Ignorable="d"
-        Title="Machine Translation" Height="520" Width="520" ResizeMode="NoResize">
+        Title="Machine Translation" Height="520" Width="620" ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="400" />
             <ColumnDefinition Width="100" />
             <ColumnDefinition Width="105" />
         </Grid.ColumnDefinitions>
@@ -28,7 +28,7 @@
         
         <TextBox 
             Grid.Row="1" Grid.Column="0" 
-            Height="20" Width="290"
+            Height="20" Width="390"
             MaxLines="1" TextWrapping="NoWrap"
             Name="DocumentToUploadPath"
             IsReadOnly="True"
@@ -52,13 +52,19 @@
                 <TextBox Name="TranslatedTextBox" IsReadOnly="True"
                          BorderThickness="0" VerticalScrollBarVisibility="Visible" TextWrapping="Wrap"/>
             </TabItem>
-            <TabItem Name="FrequencyListTab" Header="Frequency list">
+            <TabItem Header="Frequency list">
+                <DataGrid Name="FrequencyListTextBox" IsReadOnly="True"
+                         BorderThickness="0" VerticalScrollBarVisibility="Visible" GridLinesVisibility="None" />
+            </TabItem>
+            <TabItem Header="Tiny translate list">
+                <DataGrid Name="TinyTranslateListTextBox" IsReadOnly="True"
+                          BorderThickness="0" VerticalScrollBarVisibility="Visible" GridLinesVisibility="None" />
             </TabItem>
             <TabItem Header="Syntax tree">
                 <StackPanel Orientation="Horizontal" CanHorizontallyScroll="True" CanVerticallyScroll="True">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="500" />
+                            <ColumnDefinition Width="600" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="20" />
@@ -66,11 +72,11 @@
                         </Grid.RowDefinitions>
                     
                         <ComboBox Grid.Row="0" Grid.Column="0" 
-                                  Height="20" Width="500" Name="Sentences"
+                                  Height="20" Width="600" Name="Sentences"
                                   VerticalAlignment="Top" HorizontalAlignment="Left">
                             <ComboBox.ItemContainerStyle>
                                 <Style TargetType="ComboBoxItem">
-                                    <Setter Property="Width" Value="480"/>
+                                    <Setter Property="Width" Value="580"/>
                                 </Style>
                             </ComboBox.ItemContainerStyle>
                         </ComboBox>

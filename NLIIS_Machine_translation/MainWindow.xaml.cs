@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
@@ -24,11 +25,17 @@ namespace NLIIS_Machine_translation
 
             InitializeComponent();
             Sentences.SelectionChanged += BuildSyntaxTree;
+            DocumentService.Language = "English";
         }
 
         private void Help_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(string.Empty, "Help");
+            MessageBox.Show("Choose a file to translate" +
+                            "\nTranslated - see the actual full text translation to Deutsch" +
+                            "\nFrequency list - list of words translations found in DB & text with frequency and grammatical info" +
+                            "\nTiny translate list - all words found in text, translated separately and displayed with it's frequencies" +
+                            "\nSyntax tree - choose a sentence from original text and get it's syntax tree" +
+                            "\n\nThe status of the recent action you can find in the label at bottom", "Help");
         }
         
         private void Authors_Click(object sender, RoutedEventArgs e)
@@ -46,16 +53,42 @@ namespace NLIIS_Machine_translation
             }
             
             var text = DocumentService.FromFile(DocumentToUploadPath.Text);
-            //var translated = Translator.TranslateText(text);
-            var translated = "alles gute".PadLeft(10000, '0');
-            
-            var saveFilename = $"{text.Substring(0, text.Length < 10 ? text.Length : 10)}__translated";
-            var savePath = DocumentService.ToFile(translated, saveFilename);
-            SummaryLabel.Content = $"Translation saved to {savePath}";
+            var translated = Translator.TranslateText(text);
 
             TranslatedTextBox.Text = translated;
-
             Sentences.ItemsSource = DocumentService.GetSentences(text);
+
+            var termsFrequencies = DocumentService.GetTermsFrequencies(text)
+                .OrderByDescending(pair => pair.Value)
+                .ToDictionary(pair => pair.Key, pair => pair.Value);
+            var dbItemsTranslated = Translator.TranslateItemsFromDB(text);
+            var termsTranslates = Translator.TranslateWords(termsFrequencies.Keys);
+
+            FrequencyListTextBox.ItemsSource = dbItemsTranslated.Select(item => new
+            {
+                Original = item.Original,
+                Translated = item.Translated,
+                PartOfSpeech = item.PartOfSpeech,
+                Frequency = termsFrequencies.TryGetValue(item.Original, out var frequency) ? frequency.ToString() : "-"
+            });
+            var tinies = termsTranslates.Select(item => new
+            {
+                Original = item.Original,
+                Translated = item.Translated,
+                Frequency = termsFrequencies[item.Original]
+            });
+            TinyTranslateListTextBox.ItemsSource = tinies;
+
+            var saveTitle = text.Substring(0, text.Length < 10 ? text.Length : 10);
+            var saveTextTranslationFilename = $"{saveTitle}__text_translated";
+            var saveWordsTranslationFilename = $"{saveTitle}__words_translated";
+            var wordsTranlations = string.Join(
+                "\n",
+                tinies.Select(tiny => tiny.Original + ";" + tiny.Translated + ";" + tiny.Frequency));
+            var saveTextTranslationPath = DocumentService.ToFile(translated, saveTextTranslationFilename);
+            var saveWordsTranslationPath = DocumentService.ToFile(wordsTranlations, saveWordsTranslationFilename);
+            
+            SummaryLabel.Content = $"Text translation saved to {saveTextTranslationPath}; words translation saved to {saveWordsTranslationPath}";
         }
 
         private void UploadTranslations(object sender, RoutedEventArgs e)
